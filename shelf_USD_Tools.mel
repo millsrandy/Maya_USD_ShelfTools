@@ -1,0 +1,76 @@
+global proc shelf_USD_Tools () {
+    global string $gBuffStr;
+    global string $gBuffStr0;
+    global string $gBuffStr1;
+
+
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "USD Export Selected Object" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "// Quick export of single selected object in outliner to USD\n// ..." 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "commandButton.png" 
+        -image1 "commandButton.png" 
+        -style "iconOnly" 
+        -marginWidth 0
+        -marginHeight 1
+        -command "// Quick export of single selected object in outliner to USD\n// if an object is selected in the outliner\nif (size(`ls -sl`))\n{\n    string $usdObj[] = `ls -sl`;\n    global string $usdObjName = \"Object Name\";\n    $usdObjName = $usdObj[0];\n    // export path\n    string $usdFolderPath = \"D:/GuruStudio/USD/\";\n    $usdObjName = ($usdFolderPath + $usdObjName);\n    $usdObjFileCheck = ($usdObjName + \".usd\");\n    if (`file -query -exists $usdObjFileCheck` == true)\n    {\n        string $window = `window -t \"File Already Exists! Overwrite File?\" -tbm false -width 300`;\n            columnLayout -adjustableColumn true;\n                text -bgc 1 0 0 -label \"File already exists.  Overwrite file?\" -align \"center\";\n                button -label \"Overwrite\" -command \"overwriteUsd\";\n                button -label \"Cancel\" -command (\"deleteUI -window \" + $window);\n        showWindow $window;\n\n        proc overwriteUsd()\n        {\n            mayaUSDExport -sl -f $usdObjName;\n        }\n    }\n    else{\n        mayaUSDExport -sl -f $usdObjName;\n    }\n    \n}\n\n// if no object is selected in the outliner show this\nelse{\n    window -t \"USD Export Warning!\" -width 400;\n        columnLayout -adjustableColumn true;\n            text -bgc 1 0 0 -label \"Please select an object in the Outliner.\" -align \"center\";\n        print \"no\";\n    showWindow;\n}" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "USD Create New Stage" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "//Open USD Layer Editor\nmayaUsdOpenUsdLayerEditor;\n\n//Create USD..." 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "commandButton.png" 
+        -image1 "commandButton.png" 
+        -style "iconOnly" 
+        -marginWidth 0
+        -marginHeight 1
+        -command "//Open USD Layer Editor\nmayaUsdOpenUsdLayerEditor;\n\n//Create USD Stage with New Layer \nmayaUsdCreateStageWithNewLayer;\n\n//Show Shapes in Outliner\nupdateOutlinerPanelMenu Outliner|ToggledOutlinerLayout|outlinerPanel1|Show outlinerPanel1;\nif(0) {\tOutlinerToggleShapes;} else {\toutlinerEditor -e -showShapes true outlinerPanel1;};\n{\n\tstring $panel = `getCurrentOutlinerPanel`;\n\tif (\"\" != $panel) {\n\t\tint $bool = `outlinerEditor -q -showShapes $panel`;\n\t\toutlinerEditor -e -showShapes (!$bool) $panel;\n\t}\n};\n\n//Select new stageShape in Outliner\nselect -r stageShape1 ;" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+
+} 
