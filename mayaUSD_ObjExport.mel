@@ -1,11 +1,36 @@
+// Quick export of single selected object in outliner to USD
+// if an object is selected in the outliner
 if (size(`ls -sl`))
 {
     string $usdObj[] = `ls -sl`;
-    string $usdObjName = $usdObj[0];
+    global string $usdObjName = "Object Name";
+    $usdObjName = $usdObj[0];
+    // export path
     string $usdFolderPath = "D:/GuruStudio/USD/";
     $usdObjName = ($usdFolderPath + $usdObjName);
-    mayaUSDExport -sl -f $usdObjName;
+    $usdObjFileCheck = ($usdObjName + ".usd");
+    // check if file already exists
+    if (`file -query -exists $usdObjFileCheck` == true)
+    {
+        string $window = `window -t "File Already Exists! Overwrite File?" -tbm false -width 300`;
+            columnLayout -adjustableColumn true;
+                text -bgc 1 0 0 -label "File already exists.  Overwrite file?" -align "center";
+                button -label "Overwrite" -command "overwriteUsd";
+                button -label "Cancel" -command ("deleteUI -window " + $window);
+        showWindow $window;
+
+        proc overwriteUsd()
+        {
+            mayaUSDExport -sl -f $usdObjName;
+        }
+    }
+    else{
+        mayaUSDExport -sl -f $usdObjName;
+    }
+    
 }
+
+// if no object is selected in the outliner show this
 else{
     window -t "USD Export Warning!" -width 400;
         columnLayout -adjustableColumn true;
