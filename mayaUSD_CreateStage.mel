@@ -1,0 +1,19 @@
+//Open USD Layer Editor
+mayaUsdOpenUsdLayerEditor;
+
+//Create USD Stage with New Layer 
+mayaUsdCreateStageWithNewLayer;
+
+//Show Shapes in Outliner
+updateOutlinerPanelMenu Outliner|ToggledOutlinerLayout|outlinerPanel1|Show outlinerPanel1;
+if(0) {	OutlinerToggleShapes;} else {	outlinerEditor -e -showShapes true outlinerPanel1;};
+{
+	string $panel = `getCurrentOutlinerPanel`;
+	if ("" != $panel) {
+		int $bool = `outlinerEditor -q -showShapes $panel`;
+		outlinerEditor -e -showShapes (!$bool) $panel;
+	}
+};
+
+//Select new stageShape in Outliner
+select -r stageShape1 ;
