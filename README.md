@@ -11,6 +11,9 @@ shelf icon: "mayaUSD_exportselobj.png"
 
 - Exports selected item in outliner as USD.
 
+Notes:
+- Change filepath in line 9 to desired USD export path: string $usdFolderPath = "[CUSTOM PATH]";
+
 ---------------------------------------
 Create New Stage
 shelf icon: "mayaUSD_createnewstage.png"
